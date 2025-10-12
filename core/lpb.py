@@ -3,9 +3,9 @@ import torch.nn as nn
 
 class LPB(nn.Module):
     """
-    Learnable Preprocessing Block (LPB) — prosty blok konwolucyjny uczony razem z detektorem YOLO.
-    Cel: poprawa odporności na zakłócenia obrazu.
+    Learnable Preprocessing Block
     """
+
     def __init__(self, channels=3):
         super().__init__()
         self.block = nn.Sequential(
@@ -15,4 +15,7 @@ class LPB(nn.Module):
         )
 
     def forward(self, x):
-        return self.block(x)
+        print(f"[LPB] Input shape: {x.shape}")
+        x = self.block(x)
+        print(f"[LPB] Output shape: {x.shape}")
+        return x
