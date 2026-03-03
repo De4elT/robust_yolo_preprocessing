@@ -1,0 +1,6 @@
+dataset,precision,recall,mAP50,mAP50_95
+clean,0.791,0.744,0.813,0.608
+noise_s2,0,0,0,0
+noise_s2_median3,0,0,0,0
+jpeg_s2,0,0,0,0
+jpeg_s2_median3,0,0,0,0

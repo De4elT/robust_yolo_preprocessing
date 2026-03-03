@@ -1,0 +1,13 @@
+# CrowdHuman in YOLO format (person only)
+# Expected structure:
+#   data/crowdhuman/yolo/images/train
+#   data/crowdhuman/yolo/images/val
+#   data/crowdhuman/yolo/labels/train
+#   data/crowdhuman/yolo/labels/val
+
+path: data/crowdhuman/yolo
+train: images/train
+val: images/val
+
+nc: 1
+names: ['person']

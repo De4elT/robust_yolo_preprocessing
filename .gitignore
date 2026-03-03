@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+
+# Envs
+.venv/
+venv/
+
+# Local runs/results
+runs/
+results/
+
+# Local datasets (do not commit)
+data/coco/coco128/
+data/crowdhuman/
+
+# Weights (do not commit)
+weights/*.pt
+weights/*.pth
+weights/*.onnx
+
+# OS
+.DS_Store
+Thumbs.db
