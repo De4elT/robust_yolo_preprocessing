@@ -1,87 +1,89 @@
-# robust_yolo_preprocessing
+README – robust_yolo_preprocessing
 
-Projekt do pracy magisterskiej: **poprawa odporności YOLO na degradacje obrazu** przez porównanie:
-- baseline YOLOv7
-- klasyczna filtracja (offline, powtarzalna)
-- trening z augmentacją zakłóceniami (offline train_aug)
-- **Learnable Preprocessing Block (LPB)** uczony end-to-end z detektorem
+Repozytorium zawiera kod rozwijany w ramach pracy magisterskiej dotyczącej poprawy odporności detektorów obiektów YOLO na zakłócenia obrazu poprzez zastosowanie przetwarzania wstępnego.
 
-Repo zawiera narzędzia do budowania *offline* wariantów zbioru (clean/corrupt/filter) oraz skrypt do benchmarku mAP i FPS.
+Głównym celem projektu jest porównanie kilku wariantów przetwarzania obrazu przed detekcją:
 
-> **Uwaga:** w repo nie trzymamy danych ani wag modeli. Wszystko co ciężkie trafia do `data/` i `weights/` i jest ignorowane przez `.gitignore`.
+bazowego modelu YOLOv7 (baseline),
 
----
+detekcji na obrazach zdegradowanych (np. szum, kompresja JPEG),
 
-## Szybki start (Smoke test na coco128 – 10–30 min)
+klasycznej filtracji obrazu (np. filtr medianowy),
 
-### 0) Wymagania
-- Python 3.10+ (zalecane)
-- PyTorch + CUDA (zgodnie z Twoją kartą/sterownikami)
-- Pakiety narzędziowe: OpenCV, PyYAML, pandas
+podejścia z learnable preprocessing block (LPB), czyli modułu uczonego razem z detektorem.
 
-### 1) Instalacja zależności (minimalne)
-W katalogu projektu:
+Projekt jest obecnie na etapie budowy pipeline’u eksperymentalnego i wstępnych testów.
 
-```bash
-pip install -r tools/requirements_tools.txt
-```
+Stan obecny projektu
 
-PyTorch instalujesz zgodnie z oficjalną instrukcją dla swojej wersji CUDA.
+Na obecnym etapie repozytorium zawiera:
 
-### 2) Przygotuj coco128
-1. Pobierz `coco128.zip` (masz lokalnie) i wrzuć go do **root projektu**.
-2. Uruchom:
+bazową implementację YOLOv7,
 
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\setup_coco128.ps1
-```
+kod do uruchamiania testów detekcji,
 
-Po tym powinieneś mieć strukturę:
+skrypt benchmarkowy uruchamiający eksperymenty dla różnych wariantów danych,
 
-```
-data/coco/coco128/
-  images/train2017/...
-  labels/train2017/...
-```
+narzędzia do przygotowania prostego zbioru testowego (coco128),
 
-### 3) Przygotuj wagi (baseline)
-Wgraj plik wag YOLOv7 do:
+narzędzia do budowania wariantów danych z zakłóceniami.
 
-```
-weights/yolov7.pt
-```
+Repozytorium nie zawiera samych danych ani wag modeli (są one trzymane lokalnie i ignorowane przez git).
 
-(Pliku nie commitujemy.)
+Co działa
 
-### 4) Odpal smoke test
+Obecnie działają następujące elementy:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\smoke_test.ps1
-```
+Uruchamianie detekcji YOLOv7 na zbiorze testowym coco128.
 
-Wyniki znajdziesz w:
+Automatyczny skrypt benchmarkowy uruchamiający kilka wariantów eksperymentu:
 
-```
-runs/smoke/
-  results_long.csv
-  summary_by_variant.csv
-  summary_by_corruption.csv
-  env_benchmark.json
-```
+clean (obrazy bez zakłóceń),
 
----
+noise (obrazy z dodanym szumem),
 
-## CrowdHuman (docelowy zbiór)
+jpeg (obrazy z kompresją JPEG),
 
-Instrukcje krok po kroku znajdziesz w `data/README.md` oraz w skrypcie `scripts/prepare_crowdhuman.ps1`.
-W skrócie:
-1) pobierasz CrowdHuman zgodnie z licencją,
-2) doprowadzasz do struktury z folderem `images/` (ważne: małe litery),
-3) konwertujesz adnotacje `.odgt` do YOLO (`tools/convert_crowdhuman_odgt_to_yolo.py`),
-4) sprawdzasz kompletność (`tools/check_dataset.py`),
-5) budujesz warianty i benchmarkujesz jak w `tools/README.md`.
+warianty z filtracją medianową.
 
----
+Zbieranie wyników z uruchomień modelu oraz zapis ich do plików CSV.
 
-## Najważniejsze komendy (benchmark)
-Zobacz `tools/README.md`.
+Generowanie podsumowania wyników dla poszczególnych wariantów eksperymentu.
+
+Możliwość łatwego rozszerzania eksperymentu o nowe warianty przetwarzania obrazu.
+
+Smoke test przeprowadzony na zbiorze coco128 pozwala sprawdzić czy pipeline eksperymentalny działa poprawnie.
+
+
+
+
+Na obecnym etapie nie wszystkie elementy pipeline’u działają jeszcze w pełni stabilnie.
+
+Najważniejsze rzeczy w trakcie:
+
+Synchronizacja obrazów i etykiet przy generowaniu wariantów zbioru z zakłóceniami.
+W części wariantów eksperymentów model nie widzi etykiet, co powoduje zerowe wartości metryk.
+
+Dopracowanie skryptu benchmarkowego tak, aby automatycznie poprawnie parsował wyniki z logów YOLO i zapisywał je do plików wynikowych.
+
+Uporządkowanie struktury danych i konfiguracji datasetów.
+
+Integracja learnable preprocessing block (LPB) z architekturą YOLOv7 oraz przygotowanie eksperymentów porównawczych.
+
+Przygotowanie eksperymentów na docelowym zbiorze CrowdHuman.
+
+Plan dalszych prac
+
+Najbliższe kroki w projekcie obejmują:
+
+stabilizację pipeline’u eksperymentalnego,
+
+poprawne generowanie wszystkich wariantów danych,
+
+implementację i integrację learnable preprocessing block,
+
+przeprowadzenie eksperymentów porównawczych,
+
+analizę wpływu zakłóceń i filtracji na skuteczność detekcji.
+
+Wyniki tych eksperymentów będą stanowiły podstawę części eksperymentalnej pracy magisterskiej.
